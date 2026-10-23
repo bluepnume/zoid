@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>zoid previous child</title></head>
+<body>
+<!-- A child on the published zoid 11 bundle, rendered by the current code. -->
+<script src="/node_modules/zoid-previous/dist/zoid.min.js"></script>
+<script>
+    const tag = new URLSearchParams(location.search).get('tag');
+
+    zoid.create({ tag, url: location.href });
+
+    window.xprops.onLoad({ double: value => value * 2 });
+</script>
+</body>
+</html>

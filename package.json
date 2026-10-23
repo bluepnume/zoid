@@ -1,6 +1,6 @@
 {
     "name": "zoid",
-    "version": "11.0.0",
+    "version": "11.0.1",
     "description": "Cross-domain components: render an iframe or popup on another domain, pass it props including functions, and call back natively.",
     "keywords": [
         "cross-domain",
@@ -63,6 +63,7 @@
     "devDependencies": {
         "@vitest/coverage-istanbul": "^5.0.5",
         "cugel-scripts": "^0.1.0",
-        "esbuild": "^0.28.0"
+        "esbuild": "^0.28.0",
+        "zoid-previous": "npm:zoid@^11.0.0"
     }
 }

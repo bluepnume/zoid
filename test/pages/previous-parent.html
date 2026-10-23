@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>zoid previous parent</title></head>
+<body>
+<!-- A parent on the published zoid 11 bundle, rendering a child on the
+     current code (current-child.html), and telling the test what it got. -->
+<script src="/node_modules/zoid-previous/dist/zoid.min.js"></script>
+<script>
+    const foreignOrigin = `http://[::1]:${ location.port }`;
+    const report = result => window.parent.postMessage({ zoidCompat: result }, '*');
+
+    const Component = zoid.create({
+        tag:    'test-compat-previous-parent',
+        url:    `${ foreignOrigin }/test/pages/current-child.html`,
+        domain: foreignOrigin
+    });
+
+    Component({
+        onLoad:  ({ double }) => double(21).then(report),
+        onError: err => report(`error: ${ err.message }`)
+    }).render(document.body);
+</script>
+</body>
+</html>

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [11.0.1](https://github.com/bluepnume/zoid/compare/v11.0.0...v11.0.1) (2026-10-23)
+
+* published from CI through the npm trusted publisher
+* tests run the current code against the published 11.0.0 bundle, as parent and as child
+
 ## [11.0.0](https://github.com/bluepnume/zoid/compare/v10.6.1...v11.0.0) (2026-10-23)
 
 ### ⚠ BREAKING CHANGES

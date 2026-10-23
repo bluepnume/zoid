@@ -5,7 +5,8 @@
         "test/**/*.test.ts",
         "src/**/*.test.ts",
         "test/child.ts",
-        "test/basic.ts"
+        "test/basic.ts",
+        "test/current-child.ts"
     ],
     "project": [
         "src/**/*.ts",
