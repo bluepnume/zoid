@@ -71,9 +71,9 @@ component.renderTo(window.parent, "#my-container", "popup").then(() => {
 });
 ```
 
-## clone `() => ZoidComponentInstance`
+## clone `({ decorate? : (props) => props }) => ZoidComponentInstance`
 
-Clones the current instance with the exact same set of props
+Clones the current instance with the exact same set of props, or with the props changed by `decorate`.
 
 ```javascript
 const button1 = ButtonComponent({
@@ -81,9 +81,11 @@ const button1 = ButtonComponent({
 });
 
 const button2 = button1.clone();
+const button3 = button1.clone({ decorate: (props) => ({ ...props, color: "blue" }) });
 
 button1.render("#first-button-container"); // First red button
-button2.render("#first-button-container"); // Second red button
+button2.render("#second-button-container"); // Second red button
+button3.render("#third-button-container"); // A blue button
 ```
 
 ## isEligible `() => boolean`
@@ -105,11 +107,7 @@ const FirefoxOnlyButton = zoid.create({
   tag: "my-component",
   url: "https://my-site.com/my-component",
   eligible: () => {
-    if (isFireFox()) {
-      return true;
-    } else {
-      return false;
-    }
+    return { eligible: isFireFox() };
   },
 });
 ```
@@ -211,7 +209,7 @@ const component = MyComponent({
 });
 
 component.render("#container").then(() => {
-  component.setProps({
+  component.updateProps({
     color: "blue",
   });
 });
@@ -223,7 +221,7 @@ In the child window:
 console.log("The current color is", window.xprops.color); // red
 
 window.xprops.onProps(() => {
-  console.log("The current color is", window.xprops.color); // lue
+  console.log("The current color is", window.xprops.color); // blue
 });
 ```
 
@@ -244,7 +242,7 @@ document.querySelector("button#trigger-error").addEventListener("click", () => {
 
 ## event
 
-Event emitter that can be used to listen for the following events: `RENDER`, `RENDERED`, `PRERENDER`, `PRERENDERED`, `DISPLAY`, `ERROR`, `CLOSED`, `PROPS`, `RESIZE`.
+Event emitter that can be used to listen for the following events: `RENDER`, `RENDERED`, `PRERENDER`, `PRERENDERED`, `DISPLAY`, `ERROR`, `CLOSE`, `DESTROY`, `PROPS`, `RESIZE`, `FOCUS`, `BFCACHE_CACHE`, `BFCACHE_RESTORE`.
 
 ```javascript
 const myComponent = MyComponent();
@@ -255,20 +253,24 @@ myComponent.event.on(zoid.EVENT.RENDERED, () => {
 });
 ```
 
+## state `{ [string] : any }`
+
+An object shared by the instance's prop definitions and templates for the life of the instance.
+
 ## exports
 
-Any values defined in `export` and passed to `window.xprops.export()` will be available as keys on the component instance:
+Any values defined in `exports` and passed to `window.xprops.export()` will be available as keys on the component instance:
 
 ```javascript
 const CreatePostForm = zoid.create({
     tag: 'create-post-form',
     url: 'https://my-site.com/component/create-post-form',
 
-    exports: ({ getExports }) => {
-        return {
-            submit: () => getExports().then(exports => exports.submit())
-        };
+  exports: ({ getExports }) => {
+    return {
+      submit: () => getExports().then((exports) => exports.submit()),
     };
+  },
 });
 ```
 

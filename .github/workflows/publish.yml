@@ -1,39 +1,45 @@
-name: publish to npm
-on: workflow_dispatch
+name: Publish
+
+on:
+  push:
+    tags: [ 'v*' ]
+
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
-  main:
+  publish:
     runs-on: ubuntu-latest
     steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          fetch-depth: 0
-
-      - name: ⎔ Setup node
-        # sets up the .npmrc file to publish to npm
-        uses: actions/setup-node@v2
-        with:
-          node-version: "16"
-          registry-url: "https://registry.npmjs.org"
-
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
-
-      - name: Configure git user
+          node-version-file: .nvmrc
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+      - name: Check the tag matches package.json
         run: |
-          git config --global user.email ${{ github.actor }}@users.noreply.github.com
-          git config --global user.name ${{ github.actor }}
-
-      - name: Publish to npm (main branch)
-        if: github.ref_name == 'main'
-        run: npm run release
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.KRAKENJS_PAYPAL_SDK_NPM_AUTH_TOKEN }}
-
-      - name: Publish alpha to npm (non-main branch)
-        if: github.ref_name != 'main'
-        run: npm run release:alpha
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.KRAKENJS_PAYPAL_SDK_NPM_AUTH_TOKEN }}
+          TAG="${GITHUB_REF_NAME#v}"
+          VERSION="$(node -p 'require("./package.json").version')"
+          if [ "$TAG" != "$VERSION" ]; then
+            echo "Tag v$TAG does not match package.json version $VERSION" >&2
+            exit 1
+          fi
+      # A version published by hand before the tag was pushed is not a failure.
+      - name: Skip if this version is already on npm
+        id: existing
+        run: |
+          NAME="$(node -p 'require("./package.json").name')"
+          VERSION="$(node -p 'require("./package.json").version')"
+          if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+            echo "$NAME@$VERSION is already published; nothing to do"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+      # Trusted publishing: no NODE_AUTH_TOKEN. Enable it once for this package
+      # name on npmjs.com (Settings > Trusted Publisher: this repo, publish.yml).
+      - if: steps.existing.outputs.skip != 'true'
+        run: npm publish --provenance --access public

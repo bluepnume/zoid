@@ -1,0 +1,9 @@
+{
+    "extends": "cugel-scripts/tsconfig/browser.json",
+    "compilerOptions": {
+        "rootDir": "./",
+        "types": [ "node", "vitest/globals" ]
+    },
+    "include": [ "src/**/*.ts", "test/**/*.ts" ],
+    "exclude": [ "node_modules", "dist", "coverage" ]
+}

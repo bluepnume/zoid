@@ -1,24 +1,14 @@
-<p align="center"><img width="45%" alt="zoid" src="https://cdn.rawgit.com/krakenjs/zoid/main/zoid.png"></p>
+<p align="center"><img width="45%" alt="zoid" src="./zoid.png"></p>
 
 ---
 
-[![build status][build-badge]][build]
-[![code coverage][coverage-badge]][coverage]
-[![npm version][version-badge]][package]
-
-[build-badge]: https://img.shields.io/github/actions/workflow/status/krakenjs/zoid/main.yml?branch=main&logo=github&style=flat-square
-[build]: https://github.com/krakenjs/zoid/actions/workflows/main.yml?query=workflow:build
-[coverage-badge]: https://img.shields.io/codecov/c/github/krakenjs/zoid.svg?style=flat-square
-[coverage]: https://codecov.io/github/krakenjs/zoid/
-[version-badge]: https://img.shields.io/npm/v/@krakenjs/zoid.svg?style=flat-square
-[package]: https://www.npmjs.com/package/@krakenjs/zoid
+[![npm version](https://img.shields.io/npm/v/zoid.svg?style=flat-square)](https://www.npmjs.com/package/zoid)
 
 A cross-domain component toolkit, supporting:
 
 - Render an iframe or popup on a different domain, and pass down props, including objects and functions
 - Call callbacks natively from the child window without worrying about post-messaging or cross-domain restrictions
 - Create and expose components to share functionality from your site to others!
-- Render your component directly as a React, Vue or Angular component!
 
 It's 'data-down, actions up' style components, but 100% cross-domain using iframes and popups!
 
@@ -28,19 +18,27 @@ It's 'data-down, actions up' style components, but 100% cross-domain using ifram
 
 Public options and methods supported by zoid
 
-### [Demos](http://krakenjs.com/zoid/demo/index.htm)
+### [Demos](./demo/index.htm)
 
-Working demos of different zoid patterns
-
-### [Demo App](https://github.com/krakenjs/zoid-demo)
-
-Forkable demo app with build, test, publishing and demos pre-configured.
+Working demos of different zoid patterns. Build the bundle (`npm run build`) and serve the repository root to try them.
 
 ### [Example](./docs/example.md)
 
 A full example of a cross-domain component using zoid
 
 ---
+
+### Install
+
+```sh
+npm install zoid
+```
+
+```javascript
+import { create } from "zoid";
+```
+
+ES modules with TypeScript types, ES2019 syntax, tree-shakeable. For a page without a bundler, `dist/zoid.min.js` defines `window.zoid`.
 
 ### Quick example
 
@@ -109,10 +107,6 @@ Implement the component in the iframe:
 - [Post-Robot - the cross-domain messaging library which powers zoid](https://github.com/krakenjs/post-robot)
 - [Implementing Zoid video tutorial](https://www.youtube.com/watch?v=UpXavGv7FaI)
 
-#### Framework Specific
-
-- [Build a cross-domain React component](https://medium.com/@bluepnume/creating-a-cross-domain-react-component-with-zoid-fbcccc4778fd#.73jnwv44c)
-- [Introducing support for cross-domain Glimmer components, with zoid](https://medium.com/@bluepnume/introducing-support-for-cross-domain-glimmer-components-with-zoid-21287c9f91f1)
 
 ## Rationale
 
@@ -140,8 +134,7 @@ You could just use a vanilla iframe for all of this. But:
 - zoid renders the component and passes down the data
 - The child calls your callbacks when it's ready
 
-It will even automatically generate React and Angular bindings, so people can drop-in your component anywhere and not
-worry about iframes or post-messages.
+A component is a plain function, so it drops into any framework, or none, without anyone worrying about iframes or post-messages.
 
 ## FAQ
 
@@ -150,8 +143,7 @@ worry about iframes or post-messages.
   No, zoid is framework agnostic. You can:
 
   - Use it with vanilla javascript.
-  - Use it with any framework of your choice.
-  - Use it with React or Angular and take advantage of the automatic bindings on the parent page
+  - Use it with any framework of your choice: render in a mount hook, close in an unmount hook.
 
 - **Why write another ui / component library?**
 
@@ -170,11 +162,6 @@ worry about iframes or post-messages.
   - zoid also provides mechanisms for pre-rendering html and css into iframes and popups, so you can at least render a
     loading spinner, or maybe something more advanced, while the new window loads its content.
 
-- **I don't want to bother with popups, can I get zoid with just the iframe support?**
-
-  You can indeed. There's an `zoid.frame.js` and `zoid.frame.min.js` in the `dist/` folder. There's a lot of
-  magic that's needed to make popups work with IE, and that's all trimmed out.
-
 - **Can I contribute?**
 
   By all means! But please raise an issue first if it's more than a small change, to discuss the feasibility.
@@ -186,8 +173,8 @@ worry about iframes or post-messages.
 
 ## Browser Support
 
-- Internet Explorer 9+
-- Chrome 27+
-- Firefox 30+
-- Safari 5.1+
-- Opera 23+
+Current Chrome, Edge, Firefox and Safari (14 and up). zoid 11 dropped Internet Explorer and the IE-only popup bridge; use zoid 10 for those.
+
+## Changes in 11
+
+See the [changelog](./CHANGELOG.md#1100).

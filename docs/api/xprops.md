@@ -141,7 +141,7 @@ window.xprops.onError(new Error(`Something went wrong!`));
 
 ## xprops.onProps `(({ [string] : any }) => void) => void`
 
-Set up a listener to receive new props as they are set by the parent window using `componentInstance.setProps(...)`
+Set up a listener to receive new props as they are set by the parent window using `componentInstance.updateProps(...)`. Returns `{ cancel }`.
 
 In the child window:
 
@@ -161,7 +161,7 @@ const component = MyComponent({
 });
 
 component.render("#container").then(() => {
-  component.setProps({
+  component.updateProps({
     color: "blue",
   });
 });
@@ -206,7 +206,7 @@ child.render("#child-container");
 In the child window:
 
 ```javascript
-console.log("The color of this component is:", window.xprops.parent.color); // Red
+console.log("The color of this component is:", window.xprops.parent.props.color); // blue
 ```
 
 ## xprops.parent.export `({ [string] : any }) => Promise<void>`
@@ -264,18 +264,18 @@ window.xprops.parent.export({
 });
 ```
 
-## xprops.getSiblings `({ anyParent : boolean }) => Array<{ tag : string, xprops : XProps, exports : Exports }>`
+## xprops.getSiblings `({ anyParent? : boolean }) => Array<{ props : XProps, exports : Exports }>`
 
-Get an array of sibling components on the same domain
+Get an array of sibling components on the same domain: by default, the ones rendered under the same parent component; with `anyParent: true`, every one rendered by the same parent window.
 
 ```javascript
 for (const sibling of window.xprops.getSiblings()) {
-  console.log("Found sibling!", sibling.tag);
+  console.log("Found sibling!", sibling.props.tag);
 }
 ```
 
 ```javascript
 for (const sibling of window.xprops.getSiblings({ anyParent: true })) {
-  console.log("Found sibling from any parent!", sibling.tag);
+  console.log("Found sibling from any parent!", sibling.props.tag);
 }
 ```

@@ -25,9 +25,9 @@ See [Parent Props](./parent-props.md) for built-in props that can be passed to a
 
 ### container `string | HTMLElement`
 
-Element selector, or element, into which the component should be rendered.
+Element selector, or element, into which the component should be rendered. The element may sit inside shadow DOM.
 
-Defaults to `document.body`.
+Required for iframes; defaults to `body` for popups.
 
 ### context `iframe | popup`
 
@@ -41,9 +41,9 @@ Component(props).renderTo(win, container, ?context)
 
 Equivalent to `Component().render()` but allows rendering to a remote window. For example, a child component may render a new component to the parent page.
 
-- The component must have been registered on the target window
-- The component must be rendered from within the iframe of an existing component
-- The component being rendered must have the same domain as the component initiating the render
+- The component must have been registered on the target window with `zoid.create`
+- The target window must share a top window with the current one (an ancestor frame, usually `window.parent`)
+- The component being rendered must have the same domain as the component initiating the render, or the target window must be same-origin
 
 ### win `Window`
 
@@ -55,9 +55,9 @@ Object containing all of the props required by the given component
 
 ### container `string`
 
-Element selector, into which the component should be rendered. Must be a string for remote rendering
+Element selector, into which the component should be rendered. Must be a string for remote rendering.
 
-Defaults to `document.body`.
+Required for iframes; defaults to `body` for popups.
 
 ### context `iframe | popup`
 

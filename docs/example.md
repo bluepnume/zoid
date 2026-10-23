@@ -3,7 +3,7 @@
 Let's create a login component. We want the user to be able to log in on our site, and to notify the parent window
 that the user has logged in, without exposing any of the users credentials to the parent window.
 
-Take a look at the [demos](http://krakenjs.com/zoid/demo/index.htm) to see this example in action.
+Take a look at the [demos](../demo/index.htm) to see this example in action.
 
 ### As the component creator
 
@@ -117,43 +117,7 @@ My life is even easier. I just need to drop in your component onto my page:
 </script>
 ```
 
-I can render a component as many times as I like on my page.
-
-This is even easier if you're using a supported framework like React, Ember or Angular -- zoid will automatically
-set up bindings for these frameworks:
-
-### React / JSX
-
-Drop the component in any `render()` method:
-
-```javascript
-let MyReactLoginComponent = MyLoginComponent.driver("react", {
-  React: React,
-  ReactDOM: ReactDOM,
-});
-```
-
-```javascript
-render: function() {
-    return (
-        <MyReactLoginComponent prefilledEmail='foo@bar.com' onLogin={onLogin} />
-    );
-}
-```
-
-### Angular
-
-Specify the component name as a dependency to your angular app:
-
-```javascript
-angular.module("myapp", ["my-login-component"]);
-```
-
-Include the tag in one of your templates (don't forget to use dasherized prop names):
-
-```html
-<my-login-component prefilled-email="foo@bar.com" on-login="onLogin" />
-```
+I can render a component as many times as I like on my page, from any framework or none: the component is a plain function, so a React, Vue or Angular wrapper is a mount hook that calls `render` and an unmount hook that calls `close`.
 
 ---
 
@@ -161,4 +125,3 @@ And we're done! Notice how I never had to write any code to create an iframe, or
 When you call `this.props.onLogin(email);` it looks like you're just calling a function, but in reality `zoid` is transparently
 turning that callback into a post-message and relaying it to the parent for you.
 
-- [Now try building a cross-domain React component!](https://medium.com/@bluepnume/creating-a-cross-domain-react-component-with-zoid-fbcccc4778fd#.73jnwv44c)

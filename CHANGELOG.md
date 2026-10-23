@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [11.0.0](https://github.com/bluepnume/zoid/compare/v10.6.1...v11.0.0) (2026-10-23)
+
+### ⚠ BREAKING CHANGES
+
+* published as `zoid` (unscoped) again, from github.com/bluepnume/zoid; ES modules and TypeScript only, ES2019 output, current browsers only (no Internet Explorer)
+* framework drivers removed: `component.driver('react' | 'vue' | 'vue3' | 'angular' | 'angular2', ...)` is gone, along with the `zoid.frameworks.*` bundles; wrap a component in your framework's mount and unmount hooks, and dedicated packages will follow
+* the IE popup bridge is removed: the `bridgeUrl` option is ignored
+* one script-tag bundle, `dist/zoid.min.js` (`window.zoid`), with iframe and popup support; the `zoid.frame.*` builds and every `__ZOID__` compile-time flag are gone
+* the page-level global is `__zoid_11__`; the `__zoid_10_5_0__` key and `__SCRIPT_NAMESPACE__` are gone, so a zoid 11 child only talks to a zoid 11 parent
+* `mock://` urls are no longer understood
+* depends on `post-robot` 12, `cross-domain-utils` 4, `zalgo-promise` 3 and `belter` 3; values cross windows through sandestin, so cyclic objects, `Date`s and regular expressions now arrive intact
+* `jsx-pragmatic` is no longer used anywhere; templates are any function returning a DOM element made with the `doc` zoid passes in
+
+### Features
+
+* the test suite runs in a real browser (Vitest with Playwright) against a real second origin instead of mock domains, and covers popups, nested frames, shadow DOM and `renderTo`
+* a page that loads zoid does nothing until `create()` is called: no message listeners and no global until then
+
+### Bug Fixes
+
+* a component tag registered twice is refused with "Can not register multiple components with the same tag" before anything is set up for the second one
+
 ### [10.6.1](https://github.com/krakenjs/zoid/compare/v10.6.0...v10.6.1) (2026-09-22)
 
 

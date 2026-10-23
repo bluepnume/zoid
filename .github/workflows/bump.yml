@@ -1,0 +1,35 @@
+name: Bump cugel-scripts
+
+# Keeps the template on the latest cugel-scripts: installs the newest release,
+# runs the whole battery against it, and opens a pull request with the bump
+# when something changed. Runs daily; cugel-scripts can also trigger it on
+# release through workflow_dispatch.
+on:
+  schedule:
+    - cron: '30 14 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm install --save-dev cugel-scripts@latest
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: Bump cugel-scripts to the latest release
+          title: Bump cugel-scripts to the latest release
+          body: Automated bump. The full battery passed against the new version before this PR was opened.
+          branch: bump/cugel-scripts
+          delete-branch: true

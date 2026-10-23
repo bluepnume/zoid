@@ -1,124 +1,68 @@
 {
-  "name": "@krakenjs/zoid",
-  "version": "10.6.1",
-  "description": "Cross domain components.",
-  "main": "index.js",
-  "scripts": {
-    "setup": "npm install && npm run flow-typed",
-    "demo": "serve . -l 1337",
-    "lint": "eslint --ext .js --ext .jsx src/ test/ *.js",
-    "flow-typed": "rm -rf ./flow-typed && flow-typed install",
-    "flow": "flow",
-    "format": "prettier --write --ignore-unknown .",
-    "format:check": "prettier --check .",
-    "karma": "cross-env NODE_ENV=test babel-node --plugins=@babel/plugin-transform-modules-commonjs ./node_modules/.bin/karma start",
-    "babel": "babel src/ --out-dir dist/module",
-    "webpack": "babel-node --plugins=@babel/plugin-transform-modules-commonjs ./node_modules/.bin/webpack -- --progress",
-    "test": "npm run format:check && npm run lint && npm run flow && npm run karma",
-    "clear-dist": "rm -rf dist/*;",
-    "build": "npm run test && npm run babel && npm run clear-dist && npm run webpack -- $@",
-    "clean": "rimraf dist coverage",
-    "reinstall": "rimraf flow-typed && rimraf node_modules && npm install && flow-typed install",
-    "debug": "cross-env NODE_ENV=debug",
-    "prepare": "husky install",
-    "prebuild:release": "npm run clean && npm run test && npm run build",
-    "prerelease": "npm run prebuild:release",
-    "release": "standard-version",
-    "postrelease": "git push && git push --follow-tags && npm publish",
-    "prerelease:alpha": "npm run prebuild:release",
-    "release:alpha": "standard-version --prerelease alpha",
-    "postrelease:alpha": "git push && git push --follow-tags && npm publish --tag alpha"
-  },
-  "standard-version": {
-    "types": [
-      {
-        "type": "feat",
-        "section": "Features"
-      },
-      {
-        "type": "fix",
-        "section": "Bug Fixes"
-      },
-      {
-        "type": "chore",
-        "hidden": false
-      },
-      {
-        "type": "docs",
-        "hidden": false
-      },
-      {
-        "type": "style",
-        "hidden": false
-      },
-      {
-        "type": "refactor",
-        "hidden": false
-      },
-      {
-        "type": "perf",
-        "hidden": false
-      },
-      {
-        "type": "test",
-        "hidden": false
-      }
-    ]
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/krakenjs/zoid.git"
-  },
-  "keywords": [
-    "cross-domain",
-    "cross domain",
-    "components",
-    "component",
-    "krakenjs",
-    "kraken"
-  ],
-  "browserslist": [
-    "IE >= 11",
-    "chrome >= 41",
-    "firefox >= 43",
-    "safari >= 8",
-    "opera >= 23"
-  ],
-  "licenses": [
-    {
-      "type": "Apache 2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    "name": "zoid",
+    "version": "11.0.0",
+    "description": "Cross-domain components: render an iframe or popup on another domain, pass it props including functions, and call back natively.",
+    "keywords": [
+        "cross-domain",
+        "cross domain",
+        "components",
+        "component",
+        "iframe",
+        "popup",
+        "postmessage",
+        "cugel"
+    ],
+    "homepage": "https://github.com/bluepnume/zoid#readme",
+    "bugs": {
+        "url": "https://github.com/bluepnume/zoid/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/bluepnume/zoid.git"
+    },
+    "license": "Apache-2.0",
+    "author": "Daniel Brain",
+    "type": "module",
+    "sideEffects": false,
+    "engines": {
+        "node": ">=24"
+    },
+    "main": "./dist/src/index.js",
+    "module": "./dist/src/index.js",
+    "types": "./dist/src/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/src/index.d.ts",
+            "import": "./dist/src/index.js"
+        },
+        "./package.json": "./package.json"
+    },
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ],
+    "scripts": {
+        "build": "cugel-scripts build",
+        "fix": "cugel-scripts fix --changed",
+        "fix:all": "cugel-scripts fix",
+        "imports:missing": "cugel-scripts imports:missing --changed",
+        "lint": "cugel-scripts lint",
+        "test:static": "cugel-scripts static",
+        "test:unit": "cugel-scripts test --coverage",
+        "test:watch": "cugel-scripts test --watch",
+        "test": "npm run test:static && npm run build && npm run test:unit",
+        "prepack": "npm run build"
+    },
+    "dependencies": {
+        "belter": "^3.0.0",
+        "cross-domain-utils": "^4.0.2",
+        "post-robot": "^12.2.0",
+        "zalgo-promise": "^3.0.1"
+    },
+    "devDependencies": {
+        "@vitest/coverage-istanbul": "^5.0.5",
+        "cugel-scripts": "^0.1.0",
+        "esbuild": "^0.28.0"
     }
-  ],
-  "files": [
-    "dist/",
-    "src/",
-    "globals.js"
-  ],
-  "readmeFilename": "README.md",
-  "devDependencies": {
-    "@commitlint/cli": "^16.2.1",
-    "@commitlint/config-conventional": "^16.2.1",
-    "@krakenjs/grumbler-scripts": "^8.0.4",
-    "@krakenjs/jsx-pragmatic": "^3.0.0",
-    "cross-env": "^7.0.3",
-    "flow-bin": "0.155.0",
-    "flow-typed": "^3.8.0",
-    "husky": "^7.0.4",
-    "jest": "^29.3.1",
-    "lint-staged": "^12.4.0",
-    "mocha": "^4",
-    "prettier": "^2.6.2",
-    "serve": "^10.0.0",
-    "standard-version": "^9.3.2"
-  },
-  "dependencies": {
-    "@krakenjs/belter": "^2.10.1",
-    "@krakenjs/cross-domain-utils": "^3.0.0",
-    "@krakenjs/post-robot": "^11.0.0",
-    "@krakenjs/zalgo-promise": "^2.0.0"
-  },
-  "lint-staged": {
-    "*": "prettier --write --ignore-unknown"
-  }
 }

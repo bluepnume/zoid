@@ -51,6 +51,22 @@ MyComponent({
 }).render("#container");
 ```
 
+## onPrerender `() => void`, onPrerendered `() => void`
+
+Called as the prerender template starts and finishes rendering.
+
+## onError `(Error) => void`
+
+Called with any error the child sends up with `xprops.onError`, and any error zoid hits while rendering. Without it, a render error rejects the `render()` promise and is rethrown asynchronously.
+
+## onProps `(props) => void`
+
+Called whenever `updateProps` changes the props.
+
+## onBfcacheCache `() => void`, onBfcacheRestore `({ cachedDurationMs }) => void`
+
+Called when the parent page enters and leaves the back/forward cache, for a component created with `enableBfcache: true`.
+
 ## onDisplay `() => void`
 
 Called when the component has completed its initial prerender

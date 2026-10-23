@@ -1,6 +1,0 @@
-build
-dist
-coverage
-flow-typed
-test/lib/
-CHANGELOG.md

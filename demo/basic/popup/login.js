@@ -12,86 +12,78 @@ window.MyLoginZoidComponent = zoid.create({
     height: "150px",
   },
 
-  // The background overlay
+  // The background overlay, built with plain DOM calls on the document zoid passes in
 
   containerTemplate: ({ uid, tag, context, focus, close, doc }) => {
-    function closeComponent(event) {
+    const overlay = doc.createElement("div");
+    const closeLink = doc.createElement("a");
+    const style = doc.createElement("style");
+
+    overlay.id = uid;
+    overlay.className = `${tag} ${tag}-context-${context} ${tag}-focus`;
+    overlay.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
-      return close();
-    }
+      focus();
+    });
 
-    function focusComponent(event) {
+    closeLink.href = "#";
+    closeLink.className = `${tag}-close`;
+    closeLink.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
-      return focus();
-    }
+      close();
+    });
 
-    return pragmatic
-      .node(
-        "div",
-        {
-          id: uid,
-          onClick: focusComponent,
-          class: `${tag} ${tag}-context-${context} ${tag}-focus`,
-        },
+    style.textContent = `
+      #${uid} {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+      }
 
-        pragmatic.node("a", {
-          href: "#",
-          onClick: closeComponent,
-          class: `${tag}-close`,
-        }),
+      #${uid}.${tag}-context-${zoid.CONTEXT.POPUP} {
+        cursor: pointer;
+      }
 
-        pragmatic.node(
-          "style",
-          null,
-          `
-                #${uid} {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-color: rgba(0, 0, 0, 0.8);
-                }
+      #${uid} .${tag}-close {
+        position: absolute;
+        right: 16px;
+        top: 16px;
+        width: 16px;
+        height: 16px;
+        opacity: 0.6;
+      }
 
-                #${uid}.${tag}-context-${zoid.CONTEXT.POPUP} {
-                    cursor: pointer;
-                }
+      #${uid} .${tag}-close:hover {
+        opacity: 1;
+      }
 
-                #${uid} .${tag}-close {
-                    position: absolute;
-                    right: 16px;
-                    top: 16px;
-                    width: 16px;
-                    height: 16px;
-                    opacity: 0.6;
-                }
+      #${uid} .${tag}-close:before,
+      #${uid} .${tag}-close:after {
+        position: absolute;
+        left: 8px;
+        content: ' ';
+        height: 16px;
+        width: 2px;
+        background-color: white;
+      }
 
-                #${uid} .${tag}-close:hover {
-                    opacity: 1;
-                }
+      #${uid} .${tag}-close:before {
+        transform: rotate(45deg);
+      }
 
-                #${uid} .${tag}-close:before,
-                #${uid} .${tag}-close:after {
-                    position: absolute;
-                    left: 8px;
-                    content: ' ';
-                    height: 16px;
-                    width: 2px;
-                    background-color: white;
-                }
+      #${uid} .${tag}-close:after {
+        transform: rotate(-45deg);
+      }
+    `;
 
-                #${uid} .${tag}-close:before {
-                    transform: rotate(45deg);
-                }
+    overlay.appendChild(closeLink);
+    overlay.appendChild(style);
 
-                #${uid} .${tag}-close:after {
-                    transform: rotate(-45deg);
-                }
-            `
-        )
-      )
-      .render(pragmatic.dom({ doc }));
+    return overlay;
   },
 });

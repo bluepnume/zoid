@@ -71,7 +71,7 @@ email: {
 
 ## queryParam
 
-`boolean | string | (value) => string`
+`boolean | string | ({ value }) => string`
 
 Should a prop be passed in the url.
 
@@ -105,6 +105,24 @@ email: {
     }
 }
 ```
+
+## queryValue
+
+`({ value }) => any`
+
+The value to put in the url for the prop, instead of the prop itself. The only way to put a function prop in the url: give it a `queryValue` that returns what to send.
+
+```javascript
+getUser: {
+    type: 'function',
+    queryParam: 'user',
+    queryValue: ({ value }) => value().name
+}
+```
+
+## bodyParam, bodyValue
+
+The same as `queryParam` and `queryValue`, for a component loaded by form POST (`method: 'post'`, or automatically when any prop has a `bodyParam`). The value goes in the request body instead of the url.
 
 ## value
 
@@ -146,19 +164,49 @@ userAgent: {
 }) => value
 ```
 
-A function used to decorate the prop at render-time. Called with the value of the prop, should return the new value.
+A function used to decorate the prop at render-time. Called with the value of the prop (and the other props, helpers and state), should return the new value.
 
 ```javascript
 onLogin: {
     type: 'function',
-    decorate(original) {
+    decorate({ value }) {
         return function() {
             console.log('User logged in!');
-            return original.apply(this, arguments);
+            return value.apply(this, arguments);
         };
     }
 }
 ```
+
+## childDecorate
+
+`({ value, uid, tag, close, focus, show, hide, resize, onError, onProps, getParent, getParentDomain, export, getSiblings }) => value`
+
+Like `decorate`, but run in the child window, with the child helpers. This is how the built-in `xprops.close`, `xprops.focus` and the rest are made.
+
+## sendToChild
+
+`boolean`
+
+Whether the prop is sent to the child window at all. Defaults to `true`. Parent-side callbacks like `onRendered` are `sendToChild: false`.
+
+## allowDelegate
+
+`boolean`
+
+Whether the prop is handed to the window doing the rendering during `renderTo`. Defaults to `false`; `window`, `onClose`, `onDestroy`, `onDisplay`, `onResize` and `onFocus` are delegated.
+
+## sameDomain
+
+`boolean`
+
+When `true`, the prop only reaches a child on the same origin as the parent. Defaults to `false`.
+
+## trustedDomains
+
+`Array<string | RegExp>`
+
+The prop only reaches a child whose origin matches one of these. Overrides `sameDomain`.
 
 ## serialization
 
@@ -195,7 +243,7 @@ user: {
 
 `string`
 
-An aliased name for the prop
+An aliased name for the prop. Either name may be passed, and the child sees both.
 
 ```javascript
 onLogin: {

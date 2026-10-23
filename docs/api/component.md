@@ -18,7 +18,7 @@ const componentInstance = Component({
 });
 ```
 
-See [Component Instance](./instance.md);
+See [Component Instance](./instance.md).
 
 ## isChild `() => boolean`
 
@@ -34,7 +34,7 @@ if (MyComponent.isChild()) {
 
 ## xprops `{ [string] : any }`
 
-Similar to `window.xprops` -- gives you access to the props passed down to the child window or iframe
+Similar to `window.xprops` -- gives you access to the props passed down to the child window or iframe.
 
 ```javascript
 const MyComponent = zoid.create({ ... });
@@ -57,111 +57,16 @@ MyComponent.canRenderTo(window.parent).then(result => {
 });
 ```
 
-## Instances `Array<ZoidComponentInstances>`
+## instances `Array<ZoidComponentInstance>`
 
-Provides an array of currently rendered instances of the zoid component
+Provides an array of currently rendered instances of the zoid component.
 
-```
+```javascript
 const MyComponent = zoid.create({ ... });
 
 console.log(`There are currently ${ MyComponent.instances.length } active instances of MyComponent`);
 ```
 
-## driver `(frameworkName : string, dependencies : { ... }) => Driver`
+## Framework bindings
 
-Register a component with your framework of choice, so it can be rendered natively in your app.
-
-```javascript
-import FooFramework from 'foo-framework';
-
-const Component = zoid.create({ ... });
-const FooComponent = Component.driver('foo', { FooFramework });
-
-// Now `FooComponent` is natively renderable inside a `FooFramework` app.
-```
-
-### React
-
-```javascript
-let MyReactZoidComponent = MyZoidComponent.driver("react", {
-  React: React,
-  ReactDOM: ReactDOM,
-});
-```
-
-```javascript
-render() {
-    return (
-        <MyReactZoidComponent foo="bar" />
-    );
-}
-```
-
-### Angular 1
-
-```javascript
-MyZoidComponent.driver('angular', angular);`
-```
-
-```html
-<my-zoid foo="bar"></my-zoid>
-```
-
-### Angular 2
-
-```javascript
-@ng.core.NgModule({
-    imports: [
-        ng.platformBrowser.BrowserModule,
-        MyZoidComponent.driver('angular2', ng.core)
-    ]
-});
-```
-
-```html
-<my-zoid [props]="{ foo: 'bar' }"></my-zoid>
-```
-
-### Glimmer
-
-```javascript
-import Component from "@glimmer/component";
-
-export default MyZoidComponent.driver("glimmer", Component);
-```
-
-```html
-<my-zoid @foo="{{bar}}"></my-zoid>
-```
-
-### Vue
-
-```javascript
-Vue.component('app', {
-
-    components: {
-        'my-zoid': MyZoidComponent.driver('vue')
-    }
-}
-```
-
-```html
-<my-zoid :foo="bar" />
-```
-
-### Vue 3
-
-```javascript
-// Create Vue application
-const app = Vue.createApp(...)
-
-// Define a new component called my-zoid
-app.component('my-zoid', MyZoidComponent.driver('vue3'))
-
-// Mount Vue application
-app.mount(...)
-```
-
-```html
-<my-zoid :foo="bar" />
-```
+zoid 11 ships no framework drivers. A zoid component is a plain function returning an instance with `render`, so a wrapper for any framework is a few lines: create the instance in a mount hook, render it into a ref, close it on unmount, and call `updateProps` when props change. Dedicated packages for React, Vue and Angular will be published separately.
