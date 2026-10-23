@@ -202,12 +202,10 @@ describe('zoid error cases', () => {
             domain: testEnv.foreignOrigin
         }));
 
+        let openedFrame : HTMLIFrameElement | undefined;
+
         onWindowOpen().then(expect('onWindowOpen', ({ iframe } : OnWindowOpenResult) => {
-            setTimeout(() => {
-                if (iframe) {
-                    destroyElement(iframe.element);
-                }
-            }, 200);
+            openedFrame = iframe?.element;
         }));
 
         const instance = component({
@@ -216,7 +214,14 @@ describe('zoid error cases', () => {
             onDestroy: expect('onDestroy')
         });
 
-        return runOnClick(() => instance.render('body')).catch(noop);
+        // Removed once rendered: removing it mid-render is the next test's case.
+        return runOnClick(() => instance.render('body')).then(() => {
+            if (!openedFrame) {
+                throw new Error('Expected the frame to have been opened');
+            }
+
+            destroyElement(openedFrame);
+        });
     }, { timeout: 5000 }));
 
     it(`should error out when iframe is closed by someone other than zoid during render`, () => wrapPromise(({ expect }) => {
